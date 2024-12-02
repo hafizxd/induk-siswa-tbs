@@ -49,7 +49,7 @@ class StudentController extends Controller
                 return '<b>'.$data->nama_lengkap.'</b>';
             })
             ->editColumn('tanggal_lahir', function($data) {
-                return Carbon::parse($data->tanggal_lahir)->format('d/m/Y');
+                return isset($data->tanggal_lahir) ? $data->tanggal_lahir->format('d/m/Y') : null;
             })
             ->editColumn('kelas_7', function($data) {
                 return "7".$data->kelas_7 . " - " . $data->abs_7;
