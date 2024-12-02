@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Student;
 use App\Subject;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\OnEachRow;
@@ -60,7 +61,13 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
             'pondok_pesantren' => $row['pondok_pesantren'],
         ];
 
-        Validator::make($studentData, Student::$rules)->validate();
+        $validator = Validator::make($studentData, Student::$rules);
+        if ($validator->fails()) {
+            $errs = $validator->errors();
+            $errs->add('custom', '(Error terjadi pada baris '.$row->getIndex().')');
+
+            throw ValidationException::withMessages($errs->toArray());
+        }
 
         $student = Student::create($studentData);
 
