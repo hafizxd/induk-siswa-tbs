@@ -86,7 +86,7 @@ class RelationInfo extends Model
         'kewarganegaraan' => 'string',
         'nik' => 'string',
         'tempat_lahir' => 'string',
-        'tanggal_lahir' => 'string',
+        'tanggal_lahir' => 'date',
         'pendidikan' => 'string',
         'pekerjaan' => 'string',
         'penghasilan' => 'float',

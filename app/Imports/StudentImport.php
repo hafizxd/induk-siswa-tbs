@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Str;
+use Carbon\Carbon;
 
 class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStartRow, WithHeadingRow
 {
@@ -54,7 +55,7 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
             'nis' => $row['nis'],
             'nama_lengkap' => $row['nama_lengkap_siswa'],
             'tempat_lahir' => $row['tempat_lahir_siswa'],
-            'tanggal_lahir' => convertDateFormat($row['tanggal_lahir_siswa'], 'd/m/Y'),
+            'tanggal_lahir' => $this->transformDate($row['tanggal_lahir_siswa']),
             'asal_sekolah' => $row['asal_sekolah'],
             'prasekolah' => $row['prasekolah'],
             'nama_kepala_keluarga' => $row['nama_kepala_keluarga'],
@@ -80,7 +81,7 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
                 'kewarganegaraan' => $row['kewarganegaraan_ayah'],
                 'nik' => $row['nik_ayah'],
                 'tempat_lahir' => $row['tempat_lahir_ayah'],
-                'tanggal_lahir' => convertDateFormat($row['tanggal_lahir_ayah'], 'd/m/Y'),
+                'tanggal_lahir' => $this->transformDate($row['tanggal_lahir_ayah']),
                 'pendidikan' => $row['pendidikan_terakhir_ayah'],
                 'pekerjaan' => $row['pekerjaan_utama_ayah'],
                 'penghasilan' => $row['penghasilan_rata_rata_ayah'],
@@ -103,7 +104,7 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
                 'kewarganegaraan' => $row['kewarganegaraan_ibu'],
                 'nik' => $row['nik_ibu'],
                 'tempat_lahir' => $row['tempat_lahir_ibu'],
-                'tanggal_lahir' => convertDateFormat($row['tanggal_lahir_ibu'], 'd/m/Y'),
+                'tanggal_lahir' => $this->transformDate($row['tanggal_lahir_ibu']),
                 'pendidikan' => $row['pendidikan_terakhir_ibu'],
                 'pekerjaan' => $row['pekerjaan_utama_ibu'],
                 'penghasilan' => $row['penghasilan_rata_rata_ibu'],
@@ -123,7 +124,7 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
                 'kewarganegaraan' => $row['kewarganegaraan_wali'],
                 'nik' => $row['nik_wali'],
                 'tempat_lahir' => $row['tempat_lahir_wali'],
-                'tanggal_lahir' => convertDateFormat($row['tanggal_lahir_wali'], 'd/m/Y'),
+                'tanggal_lahir' => $this->transformDate($row['tanggal_lahir_wali']),
                 'pendidikan' => $row['pendidikan_terakhir_wali'],
                 'pekerjaan' => $row['pekerjaan_utama_wali'],
                 'penghasilan' => $row['penghasilan_rata_rata_wali'],
@@ -203,5 +204,18 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    private function transformDate($date)
+    {
+        if (empty($date)) {
+            return null;
+        }
+
+        if (is_numeric($date)) {
+            return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date))->format('Y-m-d');
+        }
+
+        return convertDateFormat($date, 'd/m/Y');
     }
 }
