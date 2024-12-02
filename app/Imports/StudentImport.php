@@ -25,20 +25,7 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
 
     public function onRow(Row $row)
     {
-        Validator::make(
-            $row->toArray(), 
-            [
-                'nis' => 'required|unique:students,nis', 
-                'nama_lengkap_siswa' => 'required'
-            ],
-            [
-                'nis.required' => '(baris '.$row->getIndex().'): NIS tidak boleh kosong',
-                'nis.unique' => '(baris '.$row->getIndex().'): NIS sudah ada',
-                'nama_lengkap_siswa.required' => '(baris '.$row->getIndex().'): Nama Lengkap Siswa sudah ada',
-            ]
-        )->validate();
-
-        $student = Student::create([
+        $studentData = [
             'abs_9' => $row['abs_9'],
             'kelas_9' => $row['kelas_9'],
             'abs_8' => $row['abs_8'],
@@ -71,7 +58,11 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
             'nomor_kk' => $row['nomor_kk'],
             'nomor_hp' => $row['nomor_hp_siswa'],
             'pondok_pesantren' => $row['pondok_pesantren'],
-        ]);
+        ];
+
+        Validator::make($studentData, Student::$rules)->validate();
+
+        $student = Student::create($studentData);
 
         $student->relationInfos()->createMany([
             [

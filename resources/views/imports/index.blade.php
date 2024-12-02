@@ -29,7 +29,7 @@
                                     <div class="text-danger mt-1">
                                         <ul>
                                             @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
+                                                <li>{{ $error }}</li><br>
                                             @endforeach
                                         </ul>
                                     </div>

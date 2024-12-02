@@ -17,10 +17,10 @@ class CreateRelationInfosTable extends Migration
             $table->id();
             $table->foreignId('student_id');
             $table->enum('type', ['AYAH', 'IBU', 'WALI', 'SISWA']);
-            $table->string('nama', 35)->nullable();
+            $table->string('nama', 50)->nullable();
             $table->string('status', 35)->nullable();
             $table->string('kewarganegaraan', 35)->nullable();
-            $table->string('nik', 35)->nullable();
+            $table->string('nik', 20)->nullable();
             $table->string('tempat_lahir', 35)->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->string('pendidikan', 35)->nullable();
