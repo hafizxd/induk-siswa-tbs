@@ -458,7 +458,7 @@
                                 <div class="col-sm-6">
                                     @foreach ($leftSubjects as $subject)
                                         @php 
-                                            $val = isset($subject->scoreSubjects) ? $subject->scoreSubjects[0]->nilai : '';
+                                            $val = count($subject->scoreSubjects) > 0 ? $subject->scoreSubjects[0]->nilai : '';
                                         @endphp
                                         <div class="form-group col-sm-10">
                                             {!! Form::label($subject->id, $subject->name, ['style' => 'font-weight: bold;']) !!}
@@ -473,7 +473,7 @@
                                 <div class="col-sm-6">
                                     @foreach ($rightSubjects as $subject)
                                         @php 
-                                            $val = isset($subject->scoreSubjects) ? $subject->scoreSubjects[0]->nilai : '';
+                                            $val = count($subject->scoreSubjects) > 0 ? $subject->scoreSubjects[0]->nilai : '';
                                         @endphp
                                         <div class="form-group col-sm-10">
                                             {!! Form::label($subject->id, $subject->name, ['style' => 'font-weight: bold;']) !!}
