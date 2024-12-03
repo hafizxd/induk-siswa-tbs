@@ -136,8 +136,9 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ route('grades.datatables') }}",
-                    type: "GET",
+                    type: "POST",
                     data: function (d) {
+                        d._token = "{{ csrf_token() }}";
                         d.masukStart = $('#tahunMasukStart').val();
                         d.masukEnd = $('#tahunMasukEnd').val();
                         d.mutasiStart = $('#tahunMutasiStart').val();

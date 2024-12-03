@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::put('students/{id}/update/score', 'StudentController@updateScore')->name('students.update.score');
     Route::post('students/{id}/delete', 'StudentController@destroy')->name('students.delete');
 
-    Route::get('grades/datatables', 'GradeController@datatables')->name('grades.datatables');
+    Route::post('grades/datatables', 'GradeController@datatables')->name('grades.datatables');
     Route::resource('grades', 'GradeController');
 
     Route::group(['prefix' => 'import', 'as' => 'import.'], function () {
