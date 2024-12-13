@@ -18,12 +18,29 @@
                             <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="{{ route('students.index') }}"><i data-feather="users"> </i><span>Siswa</span></a>
                             </li>
-                            <li class="sidebar-list">
+                            {{-- <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="{{ route('grades.index') }}"><i data-feather="book"> </i><span>Nilai</span></a>
+                            </li> --}}
+                            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="book"></i><span>Nilai Rapor</span></a>
+                                <ul class="sidebar-submenu">
+                                    <li><a href="{{ route('subjects.index', 'RAPOR') }}">Master Mapel</a></li>
+                                    <li><a href="{{ route('grades.index', 'RAPOR') }}">Nilai Siswa</a></li>
+                                </ul>
+                            </li>
+                            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="book"></i><span>Nilai Ujian</span></a>
+                                <ul class="sidebar-submenu">
+                                    <li><a href="{{ route('subjects.index', 'UJIAN') }}">Master Mapel</a></li>
+                                    <li><a href="{{ route('grades.index', 'UJIAN') }}">Nilai Siswa</a></li>
+                                </ul>
                             </li>
                             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="folder-plus"></i><span>Import</span></a>
                                 <ul class="sidebar-submenu">
                                     <li><a href="{{ route('import.index') }}">Import Tambah</a></li>
+                                </ul>
+                            </li>
+                            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="user-minus"></i><span>Admin</span></a>
+                                <ul class="sidebar-submenu">
+                                    <li><a href="{{ route('admins.index') }}">Data Admin</a></li>
                                 </ul>
                             </li>
                         </ul>

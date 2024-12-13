@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Iatstuti\Database\Support\CascadeSoftDeletes;
 
 class Student extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
 
     public $table = 'students';
     
@@ -16,6 +17,8 @@ class Student extends Model
 
 
     protected $dates = ['deleted_at'];
+
+    protected $cascadeDeletes = ['relationInfos', 'scores'];
 
 
 
@@ -312,6 +315,11 @@ class Student extends Model
         "PONDOK PESANTREN",
         "",
         "NILAI SEMESTER 1",
+        "NILAI SEMESTER 2",
+        "NILAI SEMESTER 3",
+        "NILAI SEMESTER 4",
+        "NILAI SEMESTER 5",
+        "NILAI SEMESTER 6",
     ];
 
     /**

@@ -16,6 +16,7 @@ class CreateSubjectsTable extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name', 40);
+            $table->enum('type', ['RAPOR', 'UJIAN']);
             $table->timestamps();
             $table->softDeletes();
         });

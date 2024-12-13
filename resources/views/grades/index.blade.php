@@ -135,7 +135,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('grades.datatables') }}",
+                    url: "{{ route('grades.datatables', request()->route('type')) }}",
                     type: "POST",
                     data: function (d) {
                         d._token = "{{ csrf_token() }}";

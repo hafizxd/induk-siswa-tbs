@@ -15,16 +15,16 @@ use Carbon\Carbon;
 
 class GradeController extends Controller
 {
-    public function index(Request $request)
+    public function index($type, Request $request)
     {
-        $subjects = Subject::all();
+        $subjects = Subject::where('type', strtoupper($type))->get();
 
         return view('grades.index', compact('subjects'));
     }
 
-    public function datatables(Request $request)
+    public function datatables($type, Request $request)
     {
-        $subjects = Subject::all();
+        $subjects = Subject::where('type', strtoupper($type))->get();
         $students = Student::query()->with('scores.scoreSubjects');
 
         if (!empty($request->masukStart)) {
@@ -51,8 +51,8 @@ class GradeController extends Controller
             ->editColumn('nama_lengkap', function($data) {
                 return '<b>'.$data->nama_lengkap.'</b>';
             })
-            ->addColumn('action', function ($student) {
-                return '<a href="'.route('students.edit', $student->id).'" class="btn btn-outline-warning btn-xs rounded"><i class="fa fa-edit"></i></a>';
+            ->addColumn('action', function ($student) use ($type) {
+                return '<a href="'.route('students.edit_grade', ['id' => $student->id, 'type' => $type]).'" class="btn btn-outline-warning btn-xs rounded"><i class="fa fa-edit"></i></a>';
             });
 
         foreach ($subjects as $subject) {
@@ -80,87 +80,27 @@ class GradeController extends Controller
         return $datatable->make();
     }
 
-    public function create()
+    public function update($type, $id, Request $request)
     {
-        return view('students.create');
-    }
-
-    public function store(CreateStudentRequest $request)
-    {
-        $input = $request->all();
-        $isExists = Student::where('nis', $input['nis'])->exists();
-        if ($isExists) {
-            Session::put('ERROR', 'NIS sudah pernah terdaftar.');
-            return redirect()->back()->withInput();
-        }
-
-        $siswaInfo = $input['siswa'];
-        $siswaInfo['type'] = 'SISWA';
-
-        $ayah = $input['ayah'];
-        $ayah['type'] = 'AYAH';
-        $ayah['tanggal_lahir'] = convertDateFormat($ayah['tanggal_lahir'], 'm/d/Y');
-
-        $ibu = $input['ibu'];
-        $ibu['type'] = 'IBU';
-        $ibu['tanggal_lahir'] = convertDateFormat($ibu['tanggal_lahir'], 'm/d/Y');
-
-        $wali = $input['wali'];
-        $wali['type'] = 'WALI';
-        $wali['tanggal_lahir'] = convertDateFormat($wali['tanggal_lahir'], 'm/d/Y');
-
-        unset($input['_token']);
-        unset($input['siswa']);
-        unset($input['ayah']);
-        unset($input['ibu']);
-        unset($input['wali']);
-
-        $input['tanggal_lahir'] = convertDateFormat($input['tanggal_lahir'], 'm/d/Y');
-        $student = Student::create($input);
-
-        $student->relationInfos()->createMany([ 
-            $siswaInfo,
-            $ayah,
-            $ibu,
-            $wali   
+        $request->validate([
+            'scores' => 'required|array'
         ]);
 
-        Session::put('SUCCESS', 'Student saved successfully.');
-
-        return redirect(route('students.index'));
-    }
-
-    public function show($id)
-    {
         $student = Student::findOrFail($id);
+        $score = $student->scores()->firstOrCreate(['student_id' => $student->id]);
 
-        return view('students.show')->with('student', $student);
-    }
+        foreach ($request->scores as $sbjId => $updScore) {
+            if ($updScore != null) {
+                $score->scoreSubjects()->updateOrCreate([
+                    'subject_id' => $sbjId
+                ], [
+                    'nilai' => $updScore
+                ]);
+            }
+        }
 
-    public function edit($id)
-    {
-        $student = Student::findOrFail($id);
+        Session::put('SUCCESS', 'Grade updated successfully.');
 
-        return view('students.edit')->with('student', $student);
-    }
-
-    public function update($id, UpdateStudentRequest $request)
-    {
-        $student = Student::findOrFail($id);
-
-        Session::put('SUCCESS', 'Student updated successfully.');
-
-        return redirect(route('students.index'));
-    }
-
-    public function destroy($id)
-    {
-        $student = Student::findOrFail($id);
-
-        $student->delete();
-
-        Session::put('SUCCESS', 'Student deleted successfully.');
-
-        return redirect(route('students.index'));
+        return redirect()->back();
     }
 }

@@ -21,39 +21,31 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
 
     protected $request;
     protected $subjects;
+    protected $subjectsUjian;
+    protected $subjectsJoined;
 
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->subjects = Subject::select('id', 'name')->get()->toArray();
+        $this->subjects = Subject::where('type', 'RAPOR')->select('id', 'name')->get()->toArray();
+        $this->subjectsUjian = Subject::where('type', 'UJIAN')->select('id', 'name')->get()->toArray();
+
+        // add two bumper or split between two subjects group
+        $arr = array_merge($this->subjects, [
+            [ 'id' => null, 'name' => null ],
+            [ 'id' => null, 'name' => null ]
+        ]);
+        $this->subjectsJoined = array_merge($arr, $this->subjectsUjian);
     }
 
     public function headings(): array
     {
-        return array_merge(Student::$excelHeadings, array_column($this->subjects, 'name'));
-    }
+        $subjects = array_column($this->subjects, 'name');
+        $subjects[] = '';
+        $subjects[] = 'NILAI UJIAN';
+        $subjects = array_merge($subjects, array_column($this->subjectsUjian, 'name'));
 
-    public function styles(Worksheet $sheet)
-    {
-        return [
-            // Style the first row as bold text.
-            1 => [
-                'font' => [
-                    'bold' => true, 
-                    'size' => 10,
-                ],
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                    ],
-                ],
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'wrapText' => false,
-                ],
-            ],
-        ];
+        return array_merge(Student::$excelHeadings, $subjects);
     }
 
     public function query()
@@ -88,15 +80,17 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
 
         // NANTI GANTI INI KE SEMESTER YG UDAH READY
 
-        $scores = array_fill(0, count($this->subjects), null);
+        $scores = array_fill(0, count($this->subjectsJoined), null);
 
         if (count($student->scores) > 0) {
             foreach ($student->scores[0]->scoreSubjects as $scoreSubject) {
-                $index = array_search($scoreSubject->subject_id, array_column($this->subjects, 'id'));
+                $index = array_search($scoreSubject->subject_id, array_column($this->subjectsJoined, 'id'));
                 if ($index !== false) {
                     $scores[$index] = $scoreSubject->nilai;
                 }
             }
+
+            $scores[count($this->subjects)+1] = $student->scores[0]->nilai_ujian;
         }
 
         $row = array_merge($row, $scores);
@@ -129,6 +123,8 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
                     break;
             }
         }
+
+        $score = (count($student->scores) > 0) ? $student->scores[0] : null;
 
         return [
             $student->abs_9,
@@ -232,7 +228,35 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
 
             $student->pondok_pesantren,
             '',
-            (count($student->scores) > 0) ? $student->scores[0]->nilai_semester : ''
+            isset($score) ? $score->nilai_semester_1 : '',
+            isset($score) ? $score->nilai_semester_2 : '',
+            isset($score) ? $score->nilai_semester_3 : '',
+            isset($score) ? $score->nilai_semester_4 : '',
+            isset($score) ? $score->nilai_semester_5 : '',
+            isset($score) ? $score->nilai_semester_6 : '',
+        ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            // Style the first row as bold text.
+            1 => [
+                'font' => [
+                    'bold' => true, 
+                    'size' => 10,
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    ],
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'wrapText' => false,
+                ],
+            ],
         ];
     }
 }

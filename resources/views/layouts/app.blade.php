@@ -28,13 +28,13 @@
     <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/vendors/prism.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/vendors/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/style.css') }}">
-    <link id="color" rel="stylesheet" href="{{ url('/html/assets/css/color-1.css" media="screen') }}">
+    {{-- <link id="color" rel="stylesheet" href="{{ url('/html/assets/css/color-1.css" media="screen') }}"> --}}
     <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/responsive.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/vendors/calendar.css') }}">
     {{-- <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/vendors/datatables.css') }}"> --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-2.1.6/fc-5.0.1/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/vendors/date-picker.css') }}">
-    <link rel="stylesheet" href="{{ url('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ url('adminlte/plugins/fontawesome-free/css/all.min.css') }}"> --}}
     <link rel="stylesheet" type="text/css" href="{{ url('/html/assets/css/vendors/select2.css') }}">
     <link rel="stylesheet" href="{{ url('https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ url('https://unpkg.com/leaflet@1.8.0/dist/leaflet.css') }}" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
@@ -143,7 +143,7 @@
     {{-- <script src="{{ url('/html/assets/js/clipboard/clipboard.min.js') }}"></script> --}}
     {{-- <script src="{{ url('/html/assets/js/custom-card/custom-card.js') }}"></script> --}}
     {{-- <script src="{{ url('/html/assets/js/notify/bootstrap-notify.min.js') }}"></script> --}}
-    <script src="{{ url('/html/assets/js/dashboard/default.js') }}"></script>
+    {{-- <script src="{{ url('/html/assets/js/dashboard/default.js') }}"></script> --}}
     <script src="{{ url('/html/assets/js/notify/index.js') }}"></script>
     <script src="{{ url('/html/assets/js/slick-slider/slick.min.js') }}"></script>
     <script src="{{ url('/html/assets/js/slick-slider/slick-theme.js') }}"></script>
@@ -162,10 +162,10 @@
     <script src="{{ url('/html/assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
     <script src="{{ url('/html/assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
     <script src="{{ url('https://cdn.jsdelivr.net/npm/flatpickr') }}"></script>
-    <script src="{{ url('accounting.min.js') }}"></script>
+    {{-- <script src="{{ url('accounting.min.js') }}"></script> --}}
     <script src="https://cdn.datatables.net/v/dt/dt-2.1.6/fc-5.0.1/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script> --}}
     <script>
         $(function() {
             $('form').on('submit', function() {
@@ -256,6 +256,42 @@
                 Session::forget('ERROR');
             @endphp
         @endif
+    </script>
+
+    <!-- iOS overlay -->
+    <link rel="stylesheet" href="{{ url('/html/assets/js/overlay/iosOverlay.css') }}">
+    <script src="{{ url('/html/assets/js/overlay/iosOverlay.js') }}"></script>
+    <script src="{{ url('/html/assets/js/overlay/spin.min.js') }}"></script>
+    <script src="{{ url('/html/assets/js/overlay/modernizr-2.0.6.min.js') }}"></script>
+    <script type="text/javascript">
+        function createOverlay(screenText) {
+            var target = document.createElement("div");
+            document.body.appendChild(target);
+            var opts = {
+                lines: 13, // The number of lines to draw
+                length: 11, // The length of each line
+                width: 5, // The line thickness
+                radius: 17, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 0, // The rotation offset
+                color: '#FFF', // #rgb or #rrggbb
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false, // Whether to use hardware acceleration
+                className: 'spinner', // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: 'auto', // Top position relative to parent in px
+                left: 'auto' // Left position relative to parent in px
+            };
+            var spinner = new Spinner(opts).spin(target);
+            gOverlay = iosOverlay({
+                text: screenText,
+                /*duration: 2e3,*/
+                spinner: spinner
+            });
+        }
+        var gOverlay;
     </script>
 
     @stack('script')

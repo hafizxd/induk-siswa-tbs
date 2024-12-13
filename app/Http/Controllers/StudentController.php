@@ -62,7 +62,7 @@ class StudentController extends Controller
             })
             ->addColumn('action', function ($student) {
                 return '
-                    <a href="'.route('students.edit', $student->id).'" class="btn btn-outline-warning btn-xs rounded"><i class="fa fa-edit"></i></a>
+                    <a href="'.route('students.edit_info', $student->id).'" class="btn btn-outline-warning btn-xs rounded"><i class="fa fa-edit"></i></a>
                     <button onclick="$(`#formDelete'.$student->id.'`).submit();" class="btn btn-outline-danger btn-xs rounded"><i class="fa fa-trash-o"></i></button>
                     <form id="formDelete'.$student->id.'" method="POST" action="'.route('students.delete', $student->id).'">
                         <input type="hidden" name="_token" value="'.csrf_token().'">
@@ -159,20 +159,27 @@ class StudentController extends Controller
             }
         }
 
-        $subjects = Subject::with(['scoreSubjects' => function ($q) use ($student) {
-            $q->whereHas('score', function ($q2) use ($student) {
-                $q2->where('student_id', $student->id);
-            });
-        }])->get();
-
-        return view('students.edit', compact(
+        return view('students.edit.edit-info', compact(
             'student', 
             'relationAyah', 
             'relationIbu', 
             'relationWali', 
-            'relationSiswa',
-            'subjects'
+            'relationSiswa'
         ));
+    }
+
+    public function editGrade($id, $type, Request $request) 
+    {
+        $student = Student::findOrFail($id);
+        $subjects = Subject::where('type', strtoupper($type))
+            ->with(['scoreSubjects' => function ($q) use ($student) {
+                $q->whereHas('score', function ($q2) use ($student) {
+                    $q2->where('student_id', $student->id);
+                });
+            }])
+            ->get();
+
+        return view('students.edit.edit-grade', compact('student', 'subjects'));
     }
 
     public function update($id, UpdateStudentRequest $request)
@@ -218,11 +225,7 @@ class StudentController extends Controller
 
         Session::put('SUCCESS', 'Student updated successfully.');
 
-        return redirect(route('students.edit', $student->id));
-    }
-
-    public function updateScore($id, Request $request) {
-        return redirect()->back();
+        return redirect(route('students.edit_info', $student->id));
     }
 
     public function destroy($id)

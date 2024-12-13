@@ -16,8 +16,13 @@ class CreateScoresTable extends Migration
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id');
-            $table->tinyInteger('semester');
-            $table->tinyInteger('nilai_semester');
+            $table->float('nilai_semester_1');
+            $table->float('nilai_semester_2');
+            $table->float('nilai_semester_3');
+            $table->float('nilai_semester_4');
+            $table->float('nilai_semester_5');
+            $table->float('nilai_semester_6');
+            $table->float('nilai_ujian');
             $table->timestamps();
             $table->softDeletes();
 
