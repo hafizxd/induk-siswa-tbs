@@ -38,10 +38,8 @@
                                     <li><a href="{{ route('import.index') }}">Import Tambah</a></li>
                                 </ul>
                             </li>
-                            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="user-minus"></i><span>Admin</span></a>
-                                <ul class="sidebar-submenu">
-                                    <li><a href="{{ route('admins.index') }}">Data Admin</a></li>
-                                </ul>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('admins.index') }}"><i data-feather="user"> </i><span>Admin</span></a>
                             </li>
                         </ul>
                     </li>
