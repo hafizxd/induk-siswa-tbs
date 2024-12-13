@@ -11,8 +11,8 @@
 @section('content')
     <ol class="breadcrumb p-l-0">
         <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="#">Nilai Rapor</a></li>
-        <li class="breadcrumb-item active">Mapel Rapor</li>
+        <li class="breadcrumb-item"><a href="#">Nilai {{ ucwords(strtolower(request()->route('type'))) }}</a></li>
+        <li class="breadcrumb-item active">Mapel {{ ucwords(strtolower(request()->route('type'))) }}</li>
     </ol>
 
     <div class="row">
@@ -20,7 +20,7 @@
             <div class="card">
                 <div class="row">
                     <div class="col-md-6 d-flex mt-2 p-0">
-                        <h4>Data Mapel Rapor</h4>
+                        <h4>Data Mapel {{ ucwords(strtolower(request()->route('type'))) }}</h4>
                     </div>
                     <div class="col-md-6 p-0">
                         <button class="btn btn-primary btn-sm ms-2" type="button" data-bs-toggle="modal" data-bs-target="#mdlCreate"><i class="fa fa-plus-circle"></i> Tambah</button>

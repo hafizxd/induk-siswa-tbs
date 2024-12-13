@@ -11,7 +11,7 @@
 @section('content')
     <ol class="breadcrumb p-l-0">
         <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-        <li class="breadcrumb-item active">Nilai</li>
+        <li class="breadcrumb-item active">Nilai {{ ucwords(strtolower(request()->route('type'))) }}</li>
     </ol>
 
     <div class="row">
@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="row">
                     <div class="col-md-6 d-flex mt-2 p-0">
-                        <h4>Data Nilai</h4>
+                        <h4>Data Nilai {{ ucwords(strtolower(request()->route('type'))) }} Siswa</h4>
                     </div>
                     <div class="col-md-6 p-0">
                         <button onclick="exportPage()" class="btn btn-success btn-sm ms-2" style="float: right;"><i class="fa fa-download"></i> Export</button>
