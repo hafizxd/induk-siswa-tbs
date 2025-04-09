@@ -76,7 +76,8 @@ class PrintController extends Controller
                 });
                 if (count($temp) > 0) {
                     $scoreSubjects = $temp->first()->scoreSubjects->map(function ($item) {
-                        $item['score'] = $item->scoreCols->avg('score');
+                        $avg = $item->scoreCols->avg('score');
+                        $item['score'] = (fmod($avg, 1) == 0) ? (int) $avg : number_format($avg, 2);
                         return $item;
                     });
 

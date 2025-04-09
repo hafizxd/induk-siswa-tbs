@@ -67,7 +67,6 @@
                 </form>
                 <div class="header-logo-wrapper col-auto p-0">
                     <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i></div>
-                    <div class="logo-wrapper"><a href="index.html"><img class="img-fluid" src="{{ url('/html/assets/images/logo/logo.png') }}" alt=""></a></div>
                 </div>
                 <div class="left-header col horizontal-wrapper ps-0">
                     <h4 style="line-height: 0px; margin: 0px; padding: 0px;">Buku Induk Siswa</h4>
