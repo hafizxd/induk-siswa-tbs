@@ -13,11 +13,16 @@ class ScoreSubject extends Model
 
     public function score() 
     {
-        return $this->belongsTo(\App\Score::class);
+        return $this->belongsTo(Score::class);
     }
 
     public function subject() 
     {
-        return $this->belongsTo(\App\Subject::class);
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function scoreCols() 
+    {
+        return $this->hasMany(ScoreSubjectCol::class);
     }
 }

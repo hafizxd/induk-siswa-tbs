@@ -21,29 +21,20 @@
                 <div class="card-body px-5">
                     <ul class="nav nav-tabs border-tab nav-primary" id="info-tab" role="tablist">
                         <li class="nav-item" style="flex-grow:1;">
-                            <a class="nav-link @if(Route::currentRouteName() == 'students.edit_info') active @endif" 
+                            <a class="nav-link @if(Route::currentRouteName() == 'students.edit.info') active @endif" 
                                 id="info-home-tab"
-                                href="{{ route('students.edit_info', $student->id) }}" 
+                                href="{{ route('students.edit.info', $student->id) }}" 
                                 role="tab" aria-controls="info-home" aria-selected="false">
                                     <i class="icofont icofont-man-in-glasses"></i>Informasi Siswa
                             </a>
                         </li>
 
                         <li class="nav-item" style="flex-grow:1;">
-                            <a class="nav-link @if(Route::currentRouteName() == 'students.edit_grade' && request()->route('type') == 'RAPOR') active @endif" 
+                            <a class="nav-link @if(Route::currentRouteName() == 'students.edit.grade' || Route::currentRouteName() == 'students.edit.grade.ujian') active @endif" 
                                 id="profile-info-tab"
-                                href="{{ route('students.edit_grade', ['type' => 'RAPOR', 'id' => $student->id]) }}" 
+                                href="{{ route('students.edit.grade', ['id' => $student->id, 'class' => 7]) }}" 
                                 role="tab" aria-controls="info-profile" aria-selected="false">
-                                    <i class="icofont icofont-read-book"></i>Nilai Rapor
-                            </a>
-                        </li>
-
-                        <li class="nav-item" style="flex-grow:1;">
-                            <a class="nav-link @if(Route::currentRouteName() == 'students.edit_grade' && request()->route('type') == 'UJIAN') active @endif" 
-                                id="profile-info-tab"
-                                href="{{ route('students.edit_grade', ['type' => 'UJIAN', 'id' => $student->id]) }}" 
-                                role="tab" aria-controls="info-profile" aria-selected="false">
-                                    <i class="icofont icofont-read-book"></i>Nilai Ujian
+                                    <i class="icofont icofont-read-book"></i>Nilai
                             </a>
                         </li>
                     </ul>

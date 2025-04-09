@@ -30,6 +30,7 @@ class CreateStudentsTable extends Migration
             $table->string('nik', 20)->nullable();
             $table->string('nis', 20);
             $table->string('nama_lengkap', 50);
+            $table->string('photo_url', 100)->nullable();
             $table->string('tempat_lahir', 20)->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->string('asal_sekolah', 35)->nullable();

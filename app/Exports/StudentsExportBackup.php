@@ -15,26 +15,42 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithCustomValueBinder, WithStyles
+class StudentsExportBackup extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithCustomValueBinder, WithStyles
 {
     use Exportable;
 
     protected $request;
     protected $subjects;
+    protected $subjectsUjian;
+    protected $subjectsJoined;
 
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $this->subjects = Subject::where('type', 'RAPOR')->select('id', 'name')->get()->toArray();
+        $this->subjectsUjian = Subject::where('type', 'UJIAN')->select('id', 'name')->get()->toArray();
+
+        // add two bumper or split between two subjects group
+        $arr = array_merge($this->subjects, [
+            [ 'id' => null, 'name' => null ],
+            [ 'id' => null, 'name' => null ]
+        ]);
+        $this->subjectsJoined = array_merge($arr, $this->subjectsUjian);
     }
 
     public function headings(): array
     {
-        return Student::$excelHeadings;
+        $subjects = array_column($this->subjects, 'name');
+        $subjects[] = '';
+        $subjects[] = 'NILAI UJIAN';
+        $subjects = array_merge($subjects, array_column($this->subjectsUjian, 'name'));
+
+        return array_merge(Student::$excelHeadings, $subjects);
     }
 
     public function query()
     {
-        $students = Student::query()->with(['relationInfos']);
+        $students = Student::query()->with(['relationInfos', 'scores.scoreSubjects']);
 
         if (!empty($this->request->masukStart)) {
             $students->where('tahun_masuk', '>=', $this->request->masukStart);
@@ -52,23 +68,37 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
             $arrClass = explode('-', $this->request->class);
             $kelas = $arrClass[0];
             $kelompok = $arrClass[1];
-            $students->where('kelas_'.$kelas, $kelompok)
-                ->orderBy('tahun_masuk', 'desc')
-                ->orderBy('abs_'.$kelas);
-        } else {
-            $students->orderBy('tahun_masuk', 'desc')
-                ->orderBy('kelas_9')
-                ->orderBy('abs_9')
-                ->orderBy('kelas_8')
-                ->orderBy('abs_8')
-                ->orderBy('kelas_7')
-                ->orderBy('abs_7');
+            $students->where('kelas_'.$kelas, $kelompok);
         }
 
         return $students;
     }
 
     public function map($student): array
+    {
+        $row = $this->wrapStudentArr($student);
+
+        // NANTI GANTI INI KE SEMESTER YG UDAH READY
+
+        $scores = array_fill(0, count($this->subjectsJoined), null);
+
+        if (count($student->scores) > 0) {
+            foreach ($student->scores[0]->scoreSubjects as $scoreSubject) {
+                $index = array_search($scoreSubject->subject_id, array_column($this->subjectsJoined, 'id'));
+                if ($index !== false) {
+                    $scores[$index] = $scoreSubject->nilai;
+                }
+            }
+
+            $scores[count($this->subjects)+1] = $student->scores[0]->nilai_ujian;
+        }
+
+        $row = array_merge($row, $scores);
+
+        return $row;
+    }
+
+    private function wrapStudentArr($student): array
     {
         $ayah = [];
         $ibu = [];
@@ -94,6 +124,8 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
             }
         }
 
+        $score = (count($student->scores) > 0) ? $student->scores[0] : null;
+
         return [
             $student->abs_9,
             $student->kelas_9,
@@ -110,7 +142,6 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
             $student->nik,
             $student->nis,
             $student->nama_lengkap,
-            $student->photo_url,
             $student->tempat_lahir,
             isset($student->tanggal_lahir) ? $student->tanggal_lahir->format('d/m/Y') : null,
             $student->asal_sekolah,
@@ -196,6 +227,13 @@ class StudentsExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder im
             $siswa->alamat ?? '',
 
             $student->pondok_pesantren,
+            '',
+            isset($score) ? $score->nilai_semester_1 : '',
+            isset($score) ? $score->nilai_semester_2 : '',
+            isset($score) ? $score->nilai_semester_3 : '',
+            isset($score) ? $score->nilai_semester_4 : '',
+            isset($score) ? $score->nilai_semester_5 : '',
+            isset($score) ? $score->nilai_semester_6 : '',
         ];
     }
 

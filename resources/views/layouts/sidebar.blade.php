@@ -1,7 +1,11 @@
 <div class="sidebar-wrapper">
     <div>
         <div class="logo-wrapper">
-            <h4 style="color: white; margin: 0; padding: 0;">Buku Induk Siswa</h4>
+            {{-- <h4 style="color: white; margin: 0; padding: 0;">Buku Induk Siswa</h4> --}}
+            <a href="{{ route('students.index') }}" class="d-flex gap-2">
+                <img class="img-fluid for-light" style="max-width: 40px;" src="{{ url('/html/assets/images/logo/logo.png') }}" alt="">
+                <h4 style="margin-top: 10px; color: white;">MTs NU TBS</h4>
+            </a>
             <div class="back-btn"><i class="fa fa-angle-left"></i></div>
             {{-- <div class="toggle-sidebar"><i class="fa fa-cog status_toggle middle sidebar-toggle"> </i></div> --}}
         </div>
@@ -18,24 +22,20 @@
                             <li class="sidebar-list">
                                 <a class="sidebar-link sidebar-title link-nav" href="{{ route('students.index') }}"><i data-feather="users"> </i><span>Siswa</span></a>
                             </li>
-                            {{-- <li class="sidebar-list">
-                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('grades.index') }}"><i data-feather="book"> </i><span>Nilai</span></a>
-                            </li> --}}
-                            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="book"></i><span>Nilai Rapor</span></a>
-                                <ul class="sidebar-submenu">
-                                    <li><a href="{{ route('subjects.index', 'RAPOR') }}">Master Mapel</a></li>
-                                    <li><a href="{{ route('grades.index', 'RAPOR') }}">Nilai Siswa</a></li>
-                                </ul>
+                            <li class="sidebar-list">
+                                <a class="sidebar-link sidebar-title link-nav" href="{{ route('grades.index', 'RAPOR') }}"><i data-feather="book-open"> </i><span>Nilai</span></a>
                             </li>
-                            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="book"></i><span>Nilai Ujian</span></a>
+                            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="book"></i><span>Master Data</span></a>
                                 <ul class="sidebar-submenu">
-                                    <li><a href="{{ route('subjects.index', 'UJIAN') }}">Master Mapel</a></li>
-                                    <li><a href="{{ route('grades.index', 'UJIAN') }}">Nilai Siswa</a></li>
+                                    <li><a href="{{ route('curriculums.index') }}">Kurikulum</a></li>
+                                    <li><a href="{{ route('periods.index') }}">Periode Pembelajaran</a></li>
+                                    <li><a href="{{ route('subjects.index', 'RAPOR') }}">Mata Pelajaran</a></li>
                                 </ul>
                             </li>
                             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="folder-plus"></i><span>Import</span></a>
                                 <ul class="sidebar-submenu">
-                                    <li><a href="{{ route('import.index') }}">Import Tambah</a></li>
+                                    <li><a href="{{ route('import.students.index') }}">Import Siswa</a></li>
+                                    <li><a href="{{ route('import.grades.index') }}">Import Nilai</a></li>
                                 </ul>
                             </li>
                             <li class="sidebar-list">

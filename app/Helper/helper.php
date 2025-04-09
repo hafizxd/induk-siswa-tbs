@@ -34,3 +34,31 @@ function convertDateFormat($date, $fromFormat, $toFormat = 'Y-m-d') {
 
     return null;
 }
+
+function convertClassNumRoman($from) {
+    $res = null;
+
+    switch ($from) {
+        case '7':
+            $res = 'VII';
+            break;
+        case '8':
+            $res = 'VIII';
+            break;
+        case '9':
+            $res = 'IX';
+            break;
+
+        case 'VII':
+            $res = '7';
+            break;
+        case 'VIII':
+            $res = '8';
+            break;
+        case 'IX':
+            $res = '9';
+            break;
+    }
+
+    return $res;
+}

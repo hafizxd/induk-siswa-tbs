@@ -40,7 +40,6 @@
     <link rel="stylesheet" href="{{ url('https://unpkg.com/leaflet@1.8.0/dist/leaflet.css') }}" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
     <script src="{{ url('https://unpkg.com/leaflet@1.8.0/dist/leaflet.js') }}" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css">
-    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/42.0.0/ckeditor5.css"> --}}
 
     <link rel="stylesheet" href="{{ url('/css/style.css') }}">
 
@@ -66,11 +65,12 @@
                         </div>
                     </div>
                 </form>
-                <div class="col-auto p-0">
-                    <a href="{{ route('students.index') }}" class="d-flex gap-2">
-                        <img class="img-fluid for-light" style="max-width: 40px;" src="{{ url('/html/assets/images/logo/logo.png') }}" alt="">
-                        <h4 style="margin-top: 10px;">MTs NU TBS</h4>
-                    </a>
+                <div class="header-logo-wrapper col-auto p-0">
+                    <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i></div>
+                    <div class="logo-wrapper"><a href="index.html"><img class="img-fluid" src="{{ url('/html/assets/images/logo/logo.png') }}" alt=""></a></div>
+                </div>
+                <div class="left-header col horizontal-wrapper ps-0">
+                    <h4 style="line-height: 0px; margin: 0px; padding: 0px;">Buku Induk Siswa</h4>
                 </div>
 
                 <div class="nav-right col-8 pull-right right-header p-0">
@@ -133,39 +133,18 @@
     <script src="{{ url('/html/assets/js/scrollbar/custom.js') }}"></script>
     <script src="{{ url('/html/assets/js/config.js') }}"></script>
     <script src="{{ url('/html/assets/js/sidebar-menu.js') }}"></script>
-    <script src="{{ url('/html/assets/js/chart/chartist/chartist.js') }}"></script>
-    <script src="{{ url('/html/assets/js/chart/chartist/chartist-plugin-tooltip.js') }}"></script>
-    {{-- <script src="{{ url('/html/assets/js/chart/knob/knob.min.js') }}"></script>
-    <script src="{{ url('/html/assets/js/chart/knob/knob-chart.js') }}"></script> --}}
-    {{-- <script src="{{ url('/html/assets/js/chart/apex-chart/apex-chart.js') }}"></script>
-    <script src="{{ url('/html/assets/js/chart/apex-chart/stock-prices.js') }}"></script> --}}
-    {{-- <script src="{{ url('/html/assets/js/prism/prism.min.js') }}"></script> --}}
-    {{-- <script src="{{ url('/html/assets/js/clipboard/clipboard.min.js') }}"></script> --}}
-    {{-- <script src="{{ url('/html/assets/js/custom-card/custom-card.js') }}"></script> --}}
-    {{-- <script src="{{ url('/html/assets/js/notify/bootstrap-notify.min.js') }}"></script> --}}
-    {{-- <script src="{{ url('/html/assets/js/dashboard/default.js') }}"></script> --}}
     <script src="{{ url('/html/assets/js/notify/index.js') }}"></script>
     <script src="{{ url('/html/assets/js/slick-slider/slick.min.js') }}"></script>
     <script src="{{ url('/html/assets/js/slick-slider/slick-theme.js') }}"></script>
-    <script src="{{ url('/html/assets/js/typeahead/handlebars.js') }}"></script>
-    <script src="{{ url('/html/assets/js/typeahead/typeahead.bundle.js') }}"></script>
-    <script src="{{ url('/html/assets/js/typeahead/typeahead.custom.js') }}"></script>
-    <script src="{{ url('/html/assets/js/typeahead-search/handlebars.js') }}"></script>
-    <script src="{{ url('/html/assets/js/typeahead-search/typeahead-custom.js') }}"></script>
     <script src="{{ url('/html/assets/js/script.js') }}"></script>
     <script src="{{ url('/html/assets/js/theme-customizer/customizer.js') }}"></script>
-    {{-- <script src="{{ url('/html/assets/js/calendar/fullcalendar.min.js') }}"></script> --}}
-    {{-- <script src="{{ url('/html/assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url('/html/assets/js/datatable/datatables/datatable.custom.js') }}"></script> --}}
     <script src="{{ url('/html/assets/js/select2/select2.full.min.js') }}"></script>
     <script src="{{ url('/html/assets/js/datepicker/date-picker/datepicker.js') }}"></script>
     <script src="{{ url('/html/assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
     <script src="{{ url('/html/assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
     <script src="{{ url('https://cdn.jsdelivr.net/npm/flatpickr') }}"></script>
-    {{-- <script src="{{ url('accounting.min.js') }}"></script> --}}
     <script src="https://cdn.datatables.net/v/dt/dt-2.1.6/fc-5.0.1/datatables.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js"></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script> --}}
     <script>
         $(function() {
             $('form').on('submit', function() {

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubjectsTable extends Migration
+class CreateScoreSubjectColsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('subjects', function (Blueprint $table) {
+        Schema::create('score_subject_cols', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 40);
-            $table->enum('type', ['RAPOR', 'UJIAN']);
-            $table->integer('order_no')->default(1);
+            $table->foreignId('score_subject_id')->constrained('score_subjects')->onDelete('cascade');
+            $table->foreignId('curriculum_col_id')->constrained('curriculum_score_cols')->onDelete('cascade');
+            $table->float('score');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,6 +29,6 @@ class CreateSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('score_subject_cols');
     }
 }

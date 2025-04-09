@@ -23,6 +23,7 @@ class Student extends Model
 
 
     public $fillable = [
+        'photo_url',
         'abs_9',
         'kelas_9',
         'abs_8',
@@ -64,6 +65,7 @@ class Student extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'photo_url' => 'string',
         'abs_9' => 'string',
         'kelas_9' => 'string',
         'abs_8' => 'string',
@@ -119,6 +121,7 @@ class Student extends Model
         'nik' => 'nullable|max:20',  
         'nis' => 'required|max:20|unique:students,nis',
         'nama_lengkap' => 'required|max:50',
+        'photo_url' => 'nullable|max:100',
         'tempat_lahir' => 'nullable|max:20',
         'tanggal_lahir' => 'nullable',
         'asal_sekolah' => 'nullable|max:35',
@@ -228,6 +231,7 @@ class Student extends Model
         "NIK",
         "NIS",
         "NAMA LENGKAP SISWA",
+        "FOTO SISWA",
         "TEMPAT LAHIR SISWA",
         "TANGGAL LAHIR SISWA",
         "ASAL SEKOLAH",
@@ -313,13 +317,13 @@ class Student extends Model
         "ALAMAT SISWA",
 
         "PONDOK PESANTREN",
-        "",
-        "NILAI SEMESTER 1",
-        "NILAI SEMESTER 2",
-        "NILAI SEMESTER 3",
-        "NILAI SEMESTER 4",
-        "NILAI SEMESTER 5",
-        "NILAI SEMESTER 6",
+        // "",
+        // "NILAI SEMESTER 1",
+        // "NILAI SEMESTER 2",
+        // "NILAI SEMESTER 3",
+        // "NILAI SEMESTER 4",
+        // "NILAI SEMESTER 5",
+        // "NILAI SEMESTER 6",
     ];
 
     /**

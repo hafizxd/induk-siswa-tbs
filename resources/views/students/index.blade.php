@@ -105,12 +105,12 @@
                     </div>
 
                     <div class="">
-                        <table class="display cell-border nowrap stripe" id="mytable">
+                        <table class="display cell-border stripe" id="mytable">
                             <thead>
                                 <tr>
                                     <th>No.</th>
                                     <th>NIS</th>
-                                    <th>Nama Siswa</th>
+                                    <th style="min-width: 200px;">Nama Siswa</th>
                                     <th>NISN</th>
                                     <th>NIK</th>
                                     <th>Tahun Masuk</th>
@@ -174,9 +174,9 @@
                     { data: 'tahun_masuk', name: 'tahun_masuk' },
                     { data: 'tahun_mutasi', name: 'tahun_mutasi' },
                     { data: 'status_mutasi', name: 'status_mutasi' },
-                    { data: 'kelas_7', name: 'kelas_7' },
-                    { data: 'kelas_8', name: 'kelas_8' },
-                    { data: 'kelas_9', name: 'kelas_9' },
+                    { data: 'kelas_abs_7', name: 'kelas_abs_7' },
+                    { data: 'kelas_abs_8', name: 'kelas_abs_8' },
+                    { data: 'kelas_abs_9', name: 'kelas_abs_9' },
                     { data: 'tempat_lahir', name: 'tempat_lahir' },
                     { data: 'tanggal_lahir', name: 'tanggal_lahir' },
                     { data: 'status_pendaftar', name: 'status_pendaftar' },
@@ -195,6 +195,12 @@
                 ],
                 columnDefs: [
                     { target: [0, 5, 6, 8, 9, 10], className: 'text-center' }
+                ],
+                order: [
+                    [5, 'desc'],
+                    [10, 'asc'],
+                    [9, 'asc'],
+                    [8, 'asc'],
                 ],
                 scrollX: true,
                 fixedColumns: {
@@ -260,7 +266,7 @@
             mutasiEnd = $("#tahunMutasiEnd").val();
             classKel = $("#class").val();
 
-            window.location = "{{ route('export.index') }}?masukStart="+masukStart+"&masukEnd="+masukEnd+"&mutasiStart="+mutasiStart+"&mutasiEnd="+mutasiEnd+"&class="+classKel
+            window.location = "{{ route('export.student') }}?masukStart="+masukStart+"&masukEnd="+masukEnd+"&mutasiStart="+mutasiStart+"&mutasiEnd="+mutasiEnd+"&class="+classKel
         }
     </script>
 @endpush

@@ -34,8 +34,12 @@
                                 <div class="modal-body">
                                     <form action="#">
                                         <div class="form-group col-sm-10">
-                                            {!! Form::label('name', 'Nama Mapel Rapor:', ['style' => 'font-weight: bold;']) !!}
+                                            {!! Form::label('name', 'Nama Mapel '.ucwords(strtolower(request()->route("type"))) .':', ['style' => 'font-weight: bold;']) !!}
                                             {!! Form::text('name', null, ['id' => 'name', 'class' => 'form-control']) !!}
+                                        </div>
+                                        <div class="form-group col-sm-10">
+                                            {!! Form::label('orderNo', 'Nomor Urut Mapel '.ucwords(strtolower(request()->route("type"))) .':', ['style' => 'font-weight: bold;']) !!}
+                                            {!! Form::text('orderNo', $nextOrderNo, ['id' => 'orderNo', 'class' => 'form-control']) !!}
                                         </div>
                                     </form>
                                 </div>
@@ -50,24 +54,50 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
+                    <ul class="nav nav-tabs border-tab nav-primary" id="info-tab" role="tablist">
+                        <li class="nav-item" style="flex-grow:1;">
+                            <a class="nav-link @if(strtoupper(request()->route('type')) == 'RAPOR') active @endif" 
+                                id="info-home-tab"
+                                href="{{ route('subjects.index', ['type' => 'RAPOR']) }}" 
+                                role="tab" aria-controls="info-book" aria-selected="false">
+                                    <i class="icofont icofont-read-book"></i>Mapel Rapor
+                            </a>
+                        </li>
 
-                    <div class="">
-                        <table class="display cell-border nowrap stripe" id="mytable">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Mata Pelajaran</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-end me-4 mt-4">
+                        <li class="nav-item" style="flex-grow:1;">
+                            <a class="nav-link @if(strtoupper(request()->route('type')) == 'UJIAN') active @endif" 
+                                id="profile-info-tab"
+                                href="{{ route('subjects.index', ['type' => 'UJIAN']) }}" 
+                                role="tab" aria-controls="info-book" aria-selected="false">
+                                    <i class="icofont icofont-read-book"></i>Mapel Ujian
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="info-tabContent">
+                        <div class="tab-pane fade show active" id="info-home" role="tabpanel" aria-labelledby="info-home-tab">
+                            
+                            <div class="">
+                                <table class="display cell-border nowrap stripe" id="mytable">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">Nomor Urut</th>
+                                            <th width="80%">Mata Pelajaran</th>
+                                            <th width="10%">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-end me-4 mt-4">
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,15 +108,20 @@
         <div class="modal-dialog modal-md">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title" id="mySmallModalLabel">Edit Mapel Rapor</h4>
+              <h4 class="modal-title" id="mySmallModalLabel">Edit Mapel {{ ucwords(strtolower(request()->route('type'))) }}</h4>
               <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="#">
+                    <input type="hidden" id="idEdit">
                     <div class="form-group col-sm-10">
-                        <input type="hidden" id="idEdit">
-                        {!! Form::label('nameEdit', 'Nama Mapel Rapor:', ['style' => 'font-weight: bold;']) !!}
+                        {!! Form::label('nameEdit', 'Nama Mapel '.ucwords(strtolower(request()->route("type"))) .':', ['style' => 'font-weight: bold;']) !!}
                         {!! Form::text('nameEdit', null, ['id' => 'nameEdit', 'class' => 'form-control']) !!}
+                    </div>
+
+                    <div class="form-group col-sm-10">
+                        {!! Form::label('orderNoEdit', 'Nomor Urut Mapel '.ucwords(strtolower(request()->route("type"))) .':', ['style' => 'font-weight: bold;']) !!}
+                        {!! Form::text('orderNoEdit', null, ['id' => 'orderNoEdit', 'class' => 'form-control']) !!}
                     </div>
                 </form>
             </div>
@@ -103,6 +138,7 @@
     <script>
         $(document).ready(function() {
             $('#mytable').DataTable({
+                paging: false,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -110,14 +146,14 @@
                     type: "GET",
                 },
                 columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'order_no', name: 'order_no'},
                     { data: 'name', name: 'name' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
                 columnDefs: [
                     { target: [0, 1, 2], className: 'text-center' }
                 ],
-                pageLength: 25
+                order: [[0, 'asc']]
             });
         });
 
@@ -127,6 +163,7 @@
 
         function saveData() {
             let name = $('#name').val()
+            let orderNo = $('#orderNo').val()
             console.log(name)
 
             createOverlay("Proses...");
@@ -136,6 +173,7 @@
                 url   : "{{ route('subjects.store', request()->route('type')) }}",
                 data : {
                     "name": name,
+                    "order_no": orderNo,
                     "_token": token
                 },
                 success : function(data) {
@@ -169,10 +207,11 @@
             });
         }
 
-        function editData(id, name) {
+        function editData(id, name, orderNo) {
             $("#mdlEdit").on("shown.bs.modal", function (e) {
                 $("#idEdit").val(id);
                 $("#nameEdit").val(name);
+                $("#orderNoEdit").val(orderNo);
             });
             $("#mdlEdit").modal("show");   
         }
@@ -180,6 +219,7 @@
         function updateData() {
             var id = $("#idEdit").val();
             var name = $("#nameEdit").val();
+            var orderNo = $("#orderNoEdit").val();
 
             createOverlay("Proses...");
             $.ajax({
@@ -188,6 +228,7 @@
                 data  : {
                     "id" : id,
                     "name" : name,
+                    "order_no": orderNo,
                     "_token": "{{ csrf_token() }}",
                     "_method": "PUT"
                 },
@@ -274,3 +315,4 @@
         }
     </script>
 @endpush
+

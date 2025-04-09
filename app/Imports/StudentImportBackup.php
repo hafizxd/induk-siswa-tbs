@@ -18,7 +18,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Str;
 use Carbon\Carbon;
 
-class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStartRow, WithHeadingRow
+class StudentImportBackup implements OnEachRow, WithEvents, WithChunkReading, WithStartRow, WithHeadingRow
 {
     use Importable, RegistersEventListeners;
 
@@ -43,7 +43,6 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
             'nik' => $row['nik'],
             'nis' => $row['nis'],
             'nama_lengkap' => $row['nama_lengkap_siswa'],
-            'photo_url' => $row['foto_siswa'],
             'tempat_lahir' => $row['tempat_lahir_siswa'],
             'tanggal_lahir' => $this->transformDate($row['tanggal_lahir_siswa']),
             'asal_sekolah' => $row['asal_sekolah'],
@@ -150,6 +149,115 @@ class StudentImport implements OnEachRow, WithEvents, WithChunkReading, WithStar
                 'alamat' => $row['alamat_siswa'],
             ],
         ]);
+
+        // $score = $student->scores()->create([
+        //     'nilai_semester_1' => $row['nilai_semester_1'],
+        //     'nilai_semester_2' => $row['nilai_semester_2'],
+        //     'nilai_semester_3' => $row['nilai_semester_3'],
+        //     'nilai_semester_4' => $row['nilai_semester_4'],
+        //     'nilai_semester_5' => $row['nilai_semester_5'],
+        //     'nilai_semester_6' => $row['nilai_semester_6'],
+        //     'nilai_ujian' => $row['nilai_ujian']
+        // ]);
+
+
+        // // Nilai
+        // $worksheetRow = $row->getDelegate()->getWorksheet();
+
+        // $arrScoreSubjects = [];
+
+        // // Nilai Rapor
+        // foreach (self::$arrSubjectId as $subject) {
+        //     $studentScore = $worksheetRow->getCellByColumnAndRow($subject['col_index'], $row->getIndex())->getValue();
+        //     if (!isset($studentScore)) {
+        //         continue;
+        //     }
+
+        //     $arrScoreSubjects[] = [
+        //         'subject_id' => $subject['id'],
+        //         'nilai' => $studentScore,
+        //     ];
+        // }
+
+        // // Nilai Ujian
+        // foreach (self::$arrSubjectUjianId as $subject) {
+        //     $studentScore = $worksheetRow->getCellByColumnAndRow($subject['col_index'], $row->getIndex())->getValue();
+        //     if (!isset($studentScore)) {
+        //         continue;
+        //     }
+
+        //     $arrScoreSubjects[] = [
+        //         'subject_id' => $subject['id'],
+        //         'nilai' => $studentScore,
+        //     ];
+        // }
+
+        // $score->scoreSubjects()->createMany($arrScoreSubjects);
+    }
+
+    public static function beforeSheet(BeforeSheet $event)
+    {
+        // Mata Pelajaran Reguler
+        // "CY" Column to int = 103
+        $colIndex = 103;
+        $arrSubjectId = [];
+
+        while (true) {
+            $cellValue = $event->sheet->getCellByColumnAndRow($colIndex, 1)->getValue();
+            if (!isset($cellValue)) {
+                break;
+            }
+
+            $subject = Subject::firstOrCreate([
+                'name' => $cellValue,
+                'type' => 'RAPOR'
+            ]);
+            $arrSubjectId[] = [
+                'col_index' => $colIndex, // pakai column index supaya tidak duplicate header name dengan nilai rapor
+                'id' => $subject->id,
+            ];
+
+            $colIndex++;
+        }
+
+        self::$arrSubjectId = $arrSubjectId;
+
+
+        // Mata Pelajaran Ujian
+        // Find "Nilai Ujian" col index
+        $arrSubjectUjianId = [];
+        $worksheet = $event->getSheet()->getDelegate();
+
+        // Assuming headers are in the first row
+        $headers = $worksheet->rangeToArray('A1:MZ1', null, false, false)[0];
+
+        // Header name to search for
+        $headerName = 'NILAI UJIAN';
+        if (($headerIndex = array_search($headerName, $headers)) !== false) {
+            $headerIndex = $headerIndex+1;
+
+            $colIndex = $headerIndex+1;
+
+            while (true) {
+                $cellValue = $event->sheet->getCellByColumnAndRow($colIndex, 1)->getValue();
+                if (!isset($cellValue)) {
+                    break;
+                }
+    
+                $subject = Subject::firstOrCreate([
+                    'name' => $cellValue,
+                    'type' => 'UJIAN'
+                ]);
+                $arrSubjectUjianId[] = [
+                    'col_index' => $colIndex, // pakai column index supaya tidak duplicate header name dengan nilai rapor
+                    'id' => $subject->id,
+                ];
+    
+                $colIndex++;
+            }
+        }    
+        
+        self::$arrSubjectUjianId = $arrSubjectUjianId;
     }
 
     public function startRow(): int

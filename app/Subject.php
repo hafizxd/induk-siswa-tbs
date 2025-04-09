@@ -17,4 +17,8 @@ class Subject extends Model
     public function scoreSubjects() {
         return $this->hasMany(ScoreSubject::class, 'subject_id', 'id');
     }
+
+    public function periods() {
+        return $this->belongsToMany(Period::class, 'period_subjects');
+    }
 }

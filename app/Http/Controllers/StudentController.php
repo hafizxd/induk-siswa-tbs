@@ -51,19 +51,30 @@ class StudentController extends Controller
             ->editColumn('tanggal_lahir', function($data) {
                 return isset($data->tanggal_lahir) ? $data->tanggal_lahir->format('d/m/Y') : null;
             })
-            ->editColumn('kelas_7', function($data) {
+            ->addColumn('kelas_abs_7', function($data) {
                 return "7".$data->kelas_7 . " - " . $data->abs_7;
             })
-            ->editColumn('kelas_8', function($data) {
+            ->addColumn('kelas_abs_8', function($data) {
                 return "8".$data->kelas_8 . " - " . $data->abs_8;
             })
-            ->editColumn('kelas_9', function($data) {
+            ->addColumn('kelas_abs_9', function($data) {
                 return "9".$data->kelas_9 . " - " . $data->abs_9;
+            })
+            ->orderColumn('kelas_abs_7', function ($query, $order) {
+                $query->orderByRaw("CONCAT('7', kelas_7, ' - ', abs_7) $order");
+            })
+            ->orderColumn('kelas_abs_8', function ($query, $order) {
+                $query->orderByRaw("CONCAT('8', kelas_8, ' - ', abs_8) $order");
+            })
+            ->orderColumn('kelas_abs_9', function ($query, $order) {
+                $query->orderByRaw("CONCAT('9', kelas_9, ' - ', abs_9) $order");
             })
             ->addColumn('action', function ($student) {
                 return '
-                    <a href="'.route('students.edit_info', $student->id).'" class="btn btn-outline-warning btn-xs rounded"><i class="fa fa-edit"></i></a>
-                    <button onclick="$(`#formDelete'.$student->id.'`).submit();" class="btn btn-outline-danger btn-xs rounded"><i class="fa fa-trash-o"></i></button>
+                    <a href="'.route('print.student', $student->id).'" class="btn btn-outline-primary btn-xs rounded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Biodata"><i class="icon-printer"></i></a>
+                    <a href="'.route('print.grade', $student->id).'" class="btn btn-outline-primary btn-xs rounded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Nilai"><i class="fa fa-print"></i></a>
+                    <a href="'.route('students.edit.info', $student->id).'" class="btn btn-outline-warning btn-xs rounded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"><i class="fa fa-edit"></i></a>
+                    <button onclick="$(`#formDelete'.$student->id.'`).submit();" class="btn btn-outline-danger btn-xs rounded" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hapus"><i class="fa fa-trash-o"></i></button>
                     <form id="formDelete'.$student->id.'" method="POST" action="'.route('students.delete', $student->id).'">
                         <input type="hidden" name="_token" value="'.csrf_token().'">
                     </form>
@@ -166,20 +177,6 @@ class StudentController extends Controller
             'relationWali', 
             'relationSiswa'
         ));
-    }
-
-    public function editGrade($id, $type, Request $request) 
-    {
-        $student = Student::findOrFail($id);
-        $subjects = Subject::where('type', strtoupper($type))
-            ->with(['scoreSubjects' => function ($q) use ($student) {
-                $q->whereHas('score', function ($q2) use ($student) {
-                    $q2->where('student_id', $student->id);
-                });
-            }])
-            ->get();
-
-        return view('students.edit.edit-grade', compact('student', 'subjects'));
     }
 
     public function update($id, UpdateStudentRequest $request)

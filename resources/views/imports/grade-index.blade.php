@@ -3,7 +3,7 @@
     <ol class="breadcrumb p-l-0">
         <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
         <li class="breadcrumb-item">Import</li>
-        <li class="breadcrumb-item Active">Import Siswa</li>
+        <li class="breadcrumb-item Active">Import Nilai</li>
     </ol>
 
     <div class="row">
@@ -11,7 +11,10 @@
             <div class="card">
                 <div class="row">
                     <div class="col-md-6 d-flex mt-2 p-0">
-                        <h4>Import Siswa</h4>
+                        <h4>Import Nilai</h4>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-end mt-2 p-0">
+                        <h4>Periode {{ $selectedPeriod->class . ' - ' . $selectedPeriod->year . '/' . ((int)$selectedPeriod->year + 1) }}</h4>
                     </div>
                 </div>
             </div>
@@ -20,10 +23,11 @@
             <div class="card">
                 <div class="card-header">
                     <h5 style="margin: 0;">Tambah Data Baru</h5>
+                    <span class="mb-0 pb-0 text-gray">(* Kolom NIS wajib ada, kolom Nama Siswa boleh kosong)</span>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <form class="" method="POST" action="{{ route('import.students.upload') }}" enctype="multipart/form-data">
+                        <form class="" method="POST" action="{{ route('import.grades.upload', $selectedPeriod->id) }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group">
@@ -45,7 +49,7 @@
                             </div>
 
                         </form>
-                        <a class="success-link" style="text-align: center;" href="{{ route('export.student.template') }}"><i class="fa fa-download"></i> Download Template</a>
+                        <a class="success-link" style="text-align: center;" href="{{ route('export.grades.template', $selectedPeriod->id) }}"><i class="fa fa-download"></i> Download Template</a>
                     </div>
                 </div>
             </div>
@@ -55,12 +59,12 @@
             <div class="card">
                 <div class="card-header">
                     <h5 style="margin: 0;">Tambah Baru / Update Data yang Sudah Ada</h5>
+                    <span class="mb-0 pb-0 text-gray">(* Kolom NIS wajib ada, kolom Nama Siswa boleh kosong)</span>
                     <span class="mb-0 pb-0 text-gray">(* Proses memakan waktu lebih lama)</span>
-                    <span class="mb-0 pb-0 text-gray">(* Parameter NIS harap tidak diubah jika update data)</span>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <form class="" method="POST" action="{{ route('import.students.upload.update') }}" enctype="multipart/form-data">
+                        <form class="" method="POST" action="{{ route('import.grades.upload.update', $selectedPeriod->id) }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group">
@@ -90,7 +94,7 @@
     </div>
 
     <div id="mdlTemplate" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <form method="GET" action="{{ route('export.student') }}">
+        <form method="GET" action="{{ route('export.grades', $selectedPeriod->id) }}">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -99,66 +103,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="">Tahun Masuk</label>
+                            <label for="">Kelas</label>
                             <div class="row" style="align-items: center;">
-                                <div class="col-sm-5">
-                                    <select id="tahunMasukStart" class="selectpicker form-control">
-                                        <option value="">-- Pilih Tahun Masuk Awal --</option>
-                                        @for($i= intval(date('Y')); $i > 2000; $i--) 
-                                            <option value="{{ $i }}">{{ $i }}</option>   
+                                <div class="col-sm-12">
+                                    <select name="classes[]" class="select2 form-control" multiple>
+                                        @for ($i = ord('A'); $i < ord('O'); $i++)
+                                            <option value="{{ chr($i) }}">{{ $selectedPeriod->class }} - {{ chr($i) }}</option>
                                         @endfor
                                     </select>
                                 </div>
-                                <div class="col-sm-2 text-center">-</div>
-                                <div class="col-sm-5">
-                                    <select id="tahunMasukEnd" class="selectpicker form-control">
-                                        <option value="">-- Pilih Tahun Masuk Akhir --</option>
-                                        @for($i= intval(date('Y')); $i > 2000; $i--) 
-                                            <option value="{{ $i }}">{{ $i }}</option>   
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="">Tahun Mutasi</label>
-                            <div class="row" style="align-items: center;">
-                                <div class="col-sm-5">
-                                    <select id="tahunMutasiStart" class="selectpicker form-control">
-                                        <option value="">-- Pilih Tahun Mutasi Awal --</option>
-                                        @for($i= intval(date('Y')); $i > 2000; $i--) 
-                                            <option value="{{ $i }}">{{ $i }}</option>   
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div class="col-sm-2 text-center">-</div>
-                                <div class="col-sm-5">
-                                    <select id="tahunMutasiEnd" class="selectpicker form-control">
-                                        <option value="">-- Pilih Tahun Mutasi Akhir --</option>
-                                        @for($i= intval(date('Y')); $i > 2000; $i--) 
-                                            <option value="{{ $i }}">{{ $i }}</option>   
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="">Kelas - Kelompok</label>
-                            <div class="row" style="align-items: center;">
-                                <select id="class" class="selectpicker form-control">
-                                    <option value="">-- Pilih Kelas --</option>
-                                    <option value="7-A">7-A</option>
-                                    <option value="7-B">7-B</option>
-                                    <option value="7-C">7-C</option>
-                                    <option value="8-A">8-A</option>
-                                    <option value="8-B">8-B</option>
-                                    <option value="8-C">8-C</option>
-                                    <option value="9-A">9-A</option>
-                                    <option value="9-B">9-B</option>
-                                    <option value="9-C">9-C</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -171,3 +124,9 @@
         </form>
     </div>
 @endsection
+
+@push('script')
+    <script>
+        $('.select2').select2();
+    </script>
+@endpush

@@ -17,13 +17,12 @@ class CreateScoreSubjectsTable extends Migration
             $table->id();
             $table->foreignId('score_id');
             $table->foreignId('subject_id');
-            $table->tinyInteger('nilai');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('score_id')->references('id')->on('scores')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
-        });
+        }); 
     }
 
     /**

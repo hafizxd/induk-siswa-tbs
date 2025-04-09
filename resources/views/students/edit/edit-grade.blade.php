@@ -1,49 +1,60 @@
-@extends('students.edit.layout')
-@section('tab-content')
-    {!! Form::open(['route' => ['grades.update', ['type' => request()->route('type'), 'id' => $student->id]]]) !!}
-    @method('PUT')
-    
-    <div class="row">
-        @php 
-            $breakpoint = ceil(count($subjects) / 2); 
-            list($leftSubjects, $rightSubjects) = $subjects->chunk($breakpoint);
-        @endphp
+@extends('students.edit.layout-grade')
 
-        <div class="col-sm-6">
-            @foreach ($leftSubjects as $subject)
-                @php 
-                    $val = count($subject->scoreSubjects) > 0 ? $subject->scoreSubjects[0]->nilai : '';
-                @endphp
-                <div class="form-group col-sm-10">
-                    {!! Form::label('scores['.$subject->id.']', $subject->name, ['style' => 'font-weight: bold;']) !!}
-                    {!! Form::number('scores['.$subject->id.']', $val, ['class' => 'form-control', 'maxlength' => 20, 'maxlength' => 20]) !!}
-                    @error('scores['.$subject->id.']')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
+@push('style')
+    <style>
+        th {
+            background-color: #eee !important;
+        }
+    </style>
+@endpush
+
+@section('tab-tab-content')
+<div>
+    <h5>Periode {{ $period->class . ' - ' . $period->year . '/' . ((int)$period->year + 1) }}</h5>
+
+    <form action="{{ route('students.update.grade', $student->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        
+        <input type="hidden" name="period_id" value="{{ $period->id }}">
+        
+        @foreach ($subjectPlaceholders as $semester => $val)
+            <div class="mb-5">
+                <h6 class="text-center text-primary">Semester {{ $semester }}</h6>
+                <div class="row">
+                    @php 
+                        $index = 1;
+                    @endphp
+            
+                    <div class="col-sm-12">
+                        <table class="table w-100">
+                            <tr>
+                                <th style="width: 50px;"></th>
+                                <th>Mata Pelajaran</th>
+                                @foreach ($period->curriculum->curriculumScoreCols as $col)
+                                    <th style="width: 150px;">{{ $col->name }}</th>
+                                @endforeach
+                            </tr>
+
+                            @foreach ($val as $idSubject => $subject)
+                                <tr>
+                                    <td>{{ $index++ }}</td>
+                                    <td>{{ $subject['subject_name'] }}</td>
+                                    @foreach ($subject['scores'] as $idCol => $score)
+                                        <td><input type="number" name="{{ 'semester['.$semester.']['.$idSubject.']['.$idCol.']' }}" value="{{ $score }}" class="form-control"></td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
 
-        <div class="col-sm-6">
-            @foreach ($rightSubjects as $subject)
-                @php 
-                    $val = count($subject->scoreSubjects) > 0 ? $subject->scoreSubjects[0]->nilai : '';
-                @endphp
-                <div class="form-group col-sm-10">
-                    {!! Form::label('scores['.$subject->id.']', $subject->name, ['style' => 'font-weight: bold;']) !!}
-                    {!! Form::number('scores['.$subject->id.']', $val, ['class' => 'form-control', 'maxlength' => 20, 'maxlength' => 20]) !!}
-                    @error('scores['.$subject->id.']')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
-                </div>
-            @endforeach
+        <!-- Submit Field -->
+        <div class="form-group col-sm-12 mt-5 d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
-    </div>
-
-    <!-- Submit Field -->
-    <div class="form-group col-sm-12 mt-5 d-flex justify-content-end gap-2">
-        <a href="{{ route('students.index') }}" class="btn btn-secondary">Cancel</a>
-        {!! Form::submit('Simpan', ['class' => 'btn btn-primary']) !!}
-    </div>
-    {!! Form::close() !!}
+    </form>
+</div>
 @endsection
