@@ -129,6 +129,9 @@ class GradeController extends Controller
                 }
             }
         }
+        if ($type == 'RAPOR' && count($padCols) <= 1) {
+            $padCols = ['', ''];
+        }
 
         foreach ($students as $key => $student) {
             $loopCount = 0;
