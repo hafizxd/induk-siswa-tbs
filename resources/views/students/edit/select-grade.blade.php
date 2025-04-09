@@ -12,8 +12,6 @@
 
         <form action="{{ route('students.period.assign', $student->id) }}" method="POST">
             @csrf
-            <input type="hidden" name="class" value="{{ $class }}">
-
             <div class="form-group">
                 <label for="">Pilih Periode :</label>
                 <select name="period_id" class="js-example-basic-single form-control">

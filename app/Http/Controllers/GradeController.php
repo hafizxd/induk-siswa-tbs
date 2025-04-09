@@ -355,13 +355,10 @@ class GradeController extends Controller
 
     public function assignPeriod(Request $request, $id) {
         $request->validate([
-            'period_id' => 'required',
-            'class' => 'required|in:7,8,9'
+            'period_id' => 'required'
         ]);
 
-        $period = Period::select('id')
-            ->where('class', convertClassNumRoman($request->class))
-            ->firstOrFail();
+        $period = Period::select('id')->findOrFail($request->period_id);
 
         $student = Student::select('id')->findOrFail($id);
         $student->scores()->create([
