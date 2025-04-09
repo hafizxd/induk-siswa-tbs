@@ -222,7 +222,7 @@ class StudentController extends Controller
 
         Session::put('SUCCESS', 'Student updated successfully.');
 
-        return redirect(route('students.edit_info', $student->id));
+        return redirect(route('students.edit.info', $student->id));
     }
 
     public function destroy($id)
