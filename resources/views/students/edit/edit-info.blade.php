@@ -15,7 +15,7 @@
         <div class="col-sm-6">
             <!-- Photo Field -->
             <div class="form-group col-sm-10">
-                {!! Form::label('photo_url', 'Foto:', ['style' => 'font-weight: bold;']) !!}
+                {!! Form::label('photo_url', 'URL Foto:', ['style' => 'font-weight: bold;']) !!}
                 <img src="{{ $student->photo_url }}" alt="Foto siswa" style="max-width: 500px; height: auto;">
                 {!! Form::text('photo_url', $student->photo_url, ['class' => 'form-control', 'maxlength' => 100]) !!}
                 @error('photo_url')

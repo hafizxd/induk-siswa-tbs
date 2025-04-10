@@ -27,9 +27,9 @@
                             </li>
                             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="book"></i><span>Master Data</span></a>
                                 <ul class="sidebar-submenu">
+                                    <li><a href="{{ route('subjects.index', 'RAPOR') }}">Mata Pelajaran</a></li>
                                     <li><a href="{{ route('curriculums.index') }}">Kurikulum</a></li>
                                     <li><a href="{{ route('periods.index') }}">Periode Pembelajaran</a></li>
-                                    <li><a href="{{ route('subjects.index', 'RAPOR') }}">Mata Pelajaran</a></li>
                                 </ul>
                             </li>
                             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)"><i data-feather="folder-plus"></i><span>Import</span></a>

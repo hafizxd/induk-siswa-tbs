@@ -67,6 +67,14 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group col-sm-10">
+                                {!! Form::label('photo_url', 'URL Foto:', ['style' => 'font-weight: bold;']) !!}
+                                {!! Form::text('photo_url', null, ['class' => 'form-control', 'maxlength' => 100]) !!}
+                                @error('photo_url')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <!-- Kelas 9 Field -->
                             <div class="form-group col-sm-10">
                                 {!! Form::label('kelas_9', 'Kelas 9 - Kelompok:', ['style' => 'font-weight: bold;']) !!}
